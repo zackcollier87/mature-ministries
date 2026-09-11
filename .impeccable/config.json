@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "src/layouts/Layout.astro"
+        ],
+        "createdAt": "2026-09-11T01:35:53.792Z",
+        "reason": "chrome-only sizes (nav/brand/footer 0.8-1.05rem), not a content reading hierarchy; real heading/body hierarchy elsewhere has strong contrast"
+      }
+    ]
+  }
+}
