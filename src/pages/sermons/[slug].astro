@@ -1,0 +1,157 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getSermons, formatDate } from '../../lib/sermons';
+
+export function getStaticPaths() {
+  return getSermons().map((s) => ({ params: { slug: s.slug }, props: { sermon: s } }));
+}
+
+const { sermon } = Astro.props;
+const paragraphs = sermon.transcript
+  ? sermon.transcript.split('\n\n').filter((p: string) => p.trim().length > 0)
+  : [];
+---
+
+<Layout title={sermon.title} description={sermon.excerpt?.slice(0, 160)}>
+  <article class="container sermon">
+    <nav class="mono breadcrumb"><a href="/sermons">&larr; Catalog</a></nav>
+
+    <header class="sermon__head">
+      {sermon.categories.length > 0 && (
+        <p class="mono sermon__series">{sermon.categories.join(' · ')}</p>
+      )}
+      <h1>{sermon.title}</h1>
+      <p class="mono sermon__date tabular-nums">{formatDate(sermon.date)}</p>
+    </header>
+
+    {sermon.youtube_id && (
+      <div class="video-frame">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${sermon.youtube_id}`}
+          title={sermon.title}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    )}
+
+    {sermon.pdf_guides.length > 0 && (
+      <div class="guides">
+        <p class="mono guides__label">STUDY GUIDE</p>
+        <ul class="guides__list">
+          {sermon.pdf_guides.map((g) => (
+            <li>
+              <a class="mono guide-link" href={g.local_path ?? g.source_url}>
+                {g.label} <span aria-hidden="true">↓</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {paragraphs.length > 0 && (
+      <div class="transcript">
+        <p class="mono transcript__label">TRANSCRIPT</p>
+        {paragraphs.map((p: string) => <p>{p}</p>)}
+      </div>
+    )}
+
+    <footer class="sermon__source mono">
+      Originally published at <a href={sermon.link}>theheritagechurch.org</a>
+    </footer>
+  </article>
+</Layout>
+
+<style>
+  .sermon { padding-block: 32px 96px; max-width: 760px; }
+  .breadcrumb { margin-bottom: 32px; }
+  .breadcrumb a { color: var(--ink-faint); font-size: 0.8rem; }
+  .breadcrumb a:hover { color: var(--oxblood); }
+
+  .sermon__head { margin-bottom: 32px; }
+  .sermon__series {
+    color: var(--oxblood);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .sermon__head h1 {
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .sermon__date { color: var(--ink-faint); font-size: 0.82rem; }
+
+  .video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid var(--rule-strong);
+    margin-bottom: 32px;
+  }
+  .video-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .guides {
+    border: 1px solid var(--rule);
+    background: var(--paper-raised);
+    box-shadow: var(--shadow-card);
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  .guides__label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 12px;
+  }
+  .guides__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+  }
+  .guide-link {
+    font-size: 0.85rem;
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 2px;
+  }
+  .guide-link:hover { color: var(--oxblood); border-color: var(--oxblood); text-decoration: none; }
+
+  .transcript { margin-bottom: 48px; }
+  .transcript__label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .transcript p {
+    max-width: 68ch;
+    color: var(--ink);
+    margin-bottom: 1.1em;
+  }
+  .transcript p:first-of-type {
+    font-size: 1.05rem;
+  }
+
+  .sermon__source {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .sermon__source a { color: var(--ink-faint); }
+</style>

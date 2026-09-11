@@ -1,0 +1,179 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getSermons, getAllSeries, formatDate } from '../../lib/sermons';
+
+const sermons = getSermons();
+const series = getAllSeries();
+---
+
+<Layout title="Catalog" description="Browse every sermon by Pastor Wayne Edwards — search by title, scripture, or series.">
+  <section class="container catalog-head">
+    <p class="mono catalog-head__tag">CATALOG</p>
+    <h1>Every entry, in order.</h1>
+    <p class="catalog-head__count mono tabular-nums" data-count>{sermons.length} sermons</p>
+  </section>
+
+  <section class="container controls">
+    <input
+      type="search"
+      id="search"
+      class="mono"
+      placeholder="Search title, scripture, or series&hellip;"
+      aria-label="Search sermons"
+    />
+    <select id="series-filter" class="mono" aria-label="Filter by series">
+      <option value="">All series</option>
+      {series.map((s) => <option value={s}>{s}</option>)}
+    </select>
+  </section>
+
+  <section class="container">
+    <p id="empty-state" class="empty-state mono" hidden>No sermons match your search.</p>
+    <ol class="catalog" id="catalog-list">
+      {sermons.map((s) => (
+        <li
+          class="catalog-row"
+          data-title={s.title.toLowerCase()}
+          data-series={s.categories.join('|')}
+          data-search={`${s.title} ${s.categories.join(' ')} ${s.tags.join(' ')}`.toLowerCase()}
+        >
+          <a href={`/sermons/${s.slug}/`} class="catalog-row__link">
+            <span class="catalog-row__date mono tabular-nums">{formatDate(s.date)}</span>
+            <span class="catalog-row__main">
+              <span class="catalog-row__title">{s.title}</span>
+              {s.categories.length > 0 && (
+                <span class="catalog-row__series mono">{s.categories.join(' · ')}</span>
+              )}
+            </span>
+            <span class="catalog-row__meta mono">
+              {s.youtube_id && <span class="badge badge--video">VIDEO</span>}
+              {s.pdf_guides.length > 0 && <span class="badge">{s.pdf_guides.length} GUIDE{s.pdf_guides.length > 1 ? 'S' : ''}</span>}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</Layout>
+
+<script>
+  const searchInput = document.getElementById('search') as HTMLInputElement;
+  const seriesFilter = document.getElementById('series-filter') as HTMLSelectElement;
+  const rows = Array.from(document.querySelectorAll<HTMLLIElement>('.catalog-row'));
+  const emptyState = document.getElementById('empty-state') as HTMLElement;
+  const countEl = document.querySelector('[data-count]') as HTMLElement;
+
+  function applyFilters() {
+    const q = searchInput.value.trim().toLowerCase();
+    const series = seriesFilter.value;
+    let visible = 0;
+    for (const row of rows) {
+      const matchesSearch = !q || row.dataset.search?.includes(q);
+      const matchesSeries = !series || row.dataset.series?.split('|').includes(series);
+      const show = Boolean(matchesSearch && matchesSeries);
+      row.hidden = !show;
+      if (show) visible++;
+    }
+    emptyState.hidden = visible !== 0;
+    countEl.textContent = `${visible} sermon${visible === 1 ? '' : 's'}`;
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+  seriesFilter.addEventListener('change', applyFilters);
+</script>
+
+<style>
+  .catalog-head { padding-block: 48px 24px; }
+  .catalog-head__tag {
+    color: var(--oxblood);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .catalog-head h1 { font-size: clamp(1.8rem, 3.4vw, 2.4rem); margin-bottom: 8px; }
+  .catalog-head__count { color: var(--ink-faint); font-size: 0.85rem; }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-block: 12px 32px;
+    position: sticky;
+    top: 72px;
+    background: var(--paper);
+    z-index: 5;
+  }
+  .controls input,
+  .controls select {
+    font-family: inherit;
+    font-size: 0.9rem;
+    padding: 10px 14px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper-raised);
+    color: var(--ink);
+    border-radius: 2px;
+  }
+  .controls input { flex: 1 1 320px; min-width: 0; }
+  .controls select { flex: 0 0 auto; min-width: 200px; }
+  .controls input:focus,
+  .controls select:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .empty-state {
+    padding: 48px 0;
+    color: var(--ink-faint);
+    text-align: center;
+  }
+
+  .catalog {
+    list-style: none;
+    margin: 0 0 64px;
+    padding: 0;
+    border-top: 1px solid var(--rule-strong);
+  }
+  .catalog-row { border-bottom: 1px solid var(--rule); }
+  .catalog-row__link {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding-block: 16px;
+    color: var(--ink);
+  }
+  .catalog-row__link:hover { text-decoration: none; background: var(--oxblood-tint); margin-inline: -16px; padding-inline: 16px; }
+  .catalog-row__link:hover .catalog-row__title { color: var(--oxblood); }
+  .catalog-row__date {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+  .catalog-row__main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .catalog-row__title {
+    font-weight: 500;
+    line-height: 1.35;
+  }
+  .catalog-row__series {
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+  }
+  .catalog-row__meta {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .badge {
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    padding: 3px 7px;
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .badge--video {
+    border-color: var(--oxblood);
+    color: var(--oxblood);
+  }
+
+  @media (max-width: 640px) {
+    .catalog-row__link { grid-template-columns: 1fr; gap: 6px; }
+    .catalog-row__meta { order: -1; }
+  }
+</style>

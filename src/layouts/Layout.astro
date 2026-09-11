@@ -1,0 +1,117 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Mature Ministries — a complete archive of Pastor Wayne Edwards’ sermon library: video, transcript, and study guides.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} · Mature Ministries</title>
+  </head>
+  <body>
+    <!-- impeccable:direction
+    THESIS: an archive is a record kept in order, not a media grid; the site reads as a bound index/card catalog, not hero-metric landing pages or media cards.
+    OWN-WORLD: stone/graphite paper ground, one committed oxblood accent carrying labels and rules; IBM Plex Mono for every catalog fact (dates, counts, refs, badges), IBM Plex Sans for reading prose; ruled catalog rows and ledger lists, no rounded media cards, no icon tiles.
+    STORY: a visitor understands this is the complete, ongoing record of one pastor's sermons, sees how large and current it is, and moves straight into the catalog, a series filter, or a specific sermon (video + transcript + guides).
+    FIRST VIEWPORT: ledger-style masthead (index tag, title, live sermon/series counts) over a two-column split: prose left, "Recent Entries" ledger right. Catalog page: sticky search + series filter over a ruled row list. Sermon page: series/date head, embedded video, guide downloads, full transcript.
+    FORM: Pulpit Card Catalog, direction 1 of 1 (single committed direction, no tournament run — no image generation available this session, see PRODUCT.md). Code-led.
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+    -->
+    <header class="site-header">
+      <div class="container site-header__row">
+        <a href="/" class="brand">
+          <span class="brand__mark mono">MM</span>
+          <span class="brand__name">Mature&nbsp;Ministries</span>
+        </a>
+        <nav class="site-nav mono">
+          <a href="/sermons">Catalog</a>
+          <a href="/#about">About</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container site-footer__row">
+        <p class="mono">Mature Ministries &middot; an archive of sermons by Pastor Wayne Edwards</p>
+        <p class="mono site-footer__source">Source library: <a href="https://theheritagechurch.org/library/">theheritagechurch.org</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .site-header__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink);
+  }
+  .brand:hover { text-decoration: none; }
+  .brand__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--oxblood);
+    color: var(--paper-raised);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 3px;
+    letter-spacing: 0.02em;
+  }
+  .brand__name {
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+  .site-nav {
+    display: flex;
+    gap: 28px;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .site-nav a { color: var(--ink-soft); }
+  .site-nav a:hover { color: var(--oxblood); }
+
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 96px;
+    padding-block: 32px;
+  }
+  .site-footer__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+  }
+  .site-footer__source a { color: var(--ink-faint); }
+</style>

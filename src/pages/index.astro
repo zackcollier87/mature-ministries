@@ -1,0 +1,168 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getSermons, formatDate } from '../lib/sermons';
+
+const sermons = getSermons();
+const total = sermons.length;
+const recent = sermons.slice(0, 3);
+const seriesCount = new Set(sermons.flatMap((s) => s.categories)).size;
+const firstDate = sermons.length ? formatDate(sermons[sermons.length - 1].date) : '';
+const lastDate = sermons.length ? formatDate(sermons[0].date) : '';
+---
+
+<Layout title="Home">
+  <section class="masthead">
+    <div class="container masthead__row">
+      <p class="mono masthead__tag">SERMON ARCHIVE · EST. RECORD {firstDate}</p>
+      <h1 class="masthead__title">A complete, ordered record<br />of Pastor Wayne Edwards&rsquo; preaching.</h1>
+      <div class="masthead__stats mono">
+        <span><strong class="tabular-nums">{total}</strong> sermons</span>
+        <span class="masthead__dot">&middot;</span>
+        <span><strong class="tabular-nums">{seriesCount}</strong> series</span>
+        <span class="masthead__dot">&middot;</span>
+        <span>through <strong>{lastDate}</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="container split" id="about">
+    <div class="split__prose">
+      <h2>Why this archive exists</h2>
+      <p>
+        Every message preached at Heritage Baptist Church — the video, the full transcript, and the
+        printed study guide in five languages — kept in one place that belongs to the pastor himself,
+        independent of any one church's website or hosting.
+      </p>
+      <p>
+        Nothing here is summarized or excerpted. Each entry is the sermon as originally delivered and
+        published, indexed by date, series, and scripture, and searchable in full.
+      </p>
+      <a class="btn" href="/sermons">Browse the full catalog &rarr;</a>
+    </div>
+
+    <div class="split__ledger">
+      <p class="ledger__label mono">RECENT ENTRIES</p>
+      <ol class="ledger">
+        {recent.map((s) => (
+          <li class="ledger__row">
+            <a href={`/sermons/${s.slug}/`}>
+              <span class="ledger__date mono tabular-nums">{formatDate(s.date)}</span>
+              <span class="ledger__title">{s.title}</span>
+              {s.categories[0] && <span class="ledger__series mono">{s.categories[0]}</span>}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .masthead {
+    border-bottom: 1px solid var(--rule-strong);
+    padding-block: 56px 48px;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 27px,
+        var(--rule) 27px,
+        var(--rule) 28px
+      );
+    background-size: 100% 28px;
+  }
+  .masthead__row { max-width: 780px; }
+  .masthead__tag {
+    color: var(--oxblood);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 18px;
+  }
+  .masthead__title {
+    font-size: clamp(2.1rem, 4.4vw, 3.2rem);
+    line-height: 1.12;
+    margin-bottom: 24px;
+  }
+  .masthead__stats {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .masthead__stats strong { color: var(--ink); }
+  .masthead__dot { color: var(--rule-strong); }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 64px;
+    padding-block: 64px;
+  }
+  @media (max-width: 800px) {
+    .split { grid-template-columns: 1fr; gap: 40px; }
+  }
+  .split__prose h2 {
+    font-size: 1.5rem;
+    margin-bottom: 18px;
+  }
+  .split__prose p {
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin-bottom: 16px;
+  }
+  .btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 12px 20px;
+    background: var(--oxblood);
+    color: var(--paper-raised);
+    border-radius: 2px;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .btn:hover {
+    background: var(--oxblood-deep);
+    text-decoration: none;
+  }
+
+  .split__ledger {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    box-shadow: var(--shadow-card);
+    padding: 24px;
+  }
+  .ledger__label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+  .ledger { list-style: none; margin: 0; padding: 0; }
+  .ledger__row {
+    border-top: 1px solid var(--rule);
+  }
+  .ledger__row:first-child { border-top: none; }
+  .ledger__row a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-block: 14px;
+    color: var(--ink);
+  }
+  .ledger__row a:hover { text-decoration: none; }
+  .ledger__row a:hover .ledger__title { color: var(--oxblood); }
+  .ledger__date {
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+  }
+  .ledger__title {
+    font-weight: 500;
+    line-height: 1.35;
+  }
+  .ledger__series {
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+  }
+</style>
