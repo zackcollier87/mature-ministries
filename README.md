@@ -7,7 +7,12 @@ A complete archive of Pastor Wayne Edwards' sermon library — video, full trans
 
 See `PRODUCT.md` for product context and `DESIGN.md` for the visual system.
 
-## Handoff notes (for whoever hosts this next)
+## Two ways to host this
+
+1. **Static (Astro + Cloudflare Pages)** — what's currently live at https://mature-ministries.pages.dev. Best if nobody needs to edit content through a GUI; updates go through re-running the scraper and redeploying.
+2. **WordPress** — see [`wordpress-theme/README.md`](wordpress-theme/README.md). Built for Brian, whose own hosting/plugin setup is WordPress-based and doesn't fit a static Cloudflare Pages site. Same design and same 498 sermons, delivered as a self-contained theme + WXR import file so it's editable day-to-day through normal WP Admin.
+
+## Handoff notes (for whoever hosts the Cloudflare/Astro version)
 
 This project was built and deployed by Zack Collier (GitHub `zackcollier87`, Cloudflare account `zackcollier87@gmail.com`). To take over hosting:
 

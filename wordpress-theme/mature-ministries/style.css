@@ -1,0 +1,170 @@
+/*
+Theme Name: Mature Ministries
+Theme URI: https://github.com/zackcollier87/mature-ministries
+Author: Zack Collier
+Description: A complete archive of Pastor Wayne Edwards' sermon library — video, transcript, and study guides. Self-contained theme (registers its own "Sermon" post type and "Series" taxonomy; no other plugin required).
+Version: 1.0.0
+Requires at least: 6.0
+Requires PHP: 7.4
+Text Domain: mature-ministries
+*/
+
+/* Design tokens ported 1:1 from the reference Astro build's global.css ("Pulpit Card Catalog" direction — see DESIGN.md in the project repo). */
+
+:root {
+  --paper: #f2efe8;
+  --paper-raised: #ffffff;
+  --ink: #2a2622;
+  --ink-soft: #5b5449;
+  --ink-faint: #8a8172;
+  --rule: #d8d1c2;
+  --rule-strong: #b7ac95;
+  --oxblood: #7a1f2b;
+  --oxblood-deep: #5c1520;
+  --oxblood-tint: #f4e4e2;
+  --focus: #1c5f6b;
+  --shadow-card: 0 1px 0 rgba(42,38,34,0.05), 0 8px 20px -12px rgba(42,38,34,0.35);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #201d19;
+    --paper-raised: #29251f;
+    --ink: #ece6d9;
+    --ink-soft: #c2b8a4;
+    --ink-faint: #8f8471;
+    --rule: #3c362c;
+    --rule-strong: #514a3b;
+    --oxblood: #d4636f;
+    --oxblood-deep: #e88a93;
+    --oxblood-tint: #3a2020;
+    --focus: #6fc4d4;
+  }
+}
+
+* { box-sizing: border-box; }
+html { color-scheme: light dark; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: var(--oxblood); text-decoration: none; }
+a:hover { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 2px; }
+
+.mono { font-family: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace; letter-spacing: -0.01em; }
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+::selection { background: var(--oxblood); color: var(--paper-raised); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+
+h1, h2, h3, h4 { font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+p { margin: 0; }
+
+.container { max-width: 1120px; margin: 0 auto; padding-inline: 24px; }
+
+/* Header */
+.site-header { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--rule-strong); }
+.site-header__row { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { display: flex; align-items: center; gap: 12px; color: var(--ink); }
+.brand:hover { text-decoration: none; }
+.brand__mark { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--oxblood); color: var(--paper-raised); font-weight: 600; font-size: 0.9rem; border-radius: 3px; letter-spacing: 0.02em; }
+.brand__name { font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; }
+.site-nav { display: flex; gap: 28px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.site-nav a { color: var(--ink-soft); }
+.site-nav a:hover { color: var(--oxblood); }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--rule); margin-top: 96px; padding-block: 32px; }
+.site-footer__row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 0.8rem; color: var(--ink-faint); }
+.site-footer__source a { color: var(--ink-faint); }
+
+/* Home masthead */
+.masthead { border-bottom: 1px solid var(--rule-strong); padding-block: 56px 48px; background: repeating-linear-gradient(to bottom, transparent, transparent 27px, var(--rule) 27px, var(--rule) 28px); background-size: 100% 28px; }
+.masthead__row { max-width: 780px; }
+.masthead__tag { color: var(--oxblood); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px; }
+.masthead__title { font-size: clamp(2.1rem, 4.4vw, 3.2rem); line-height: 1.12; margin-bottom: 24px; }
+.masthead__stats { font-size: 0.92rem; color: var(--ink-soft); display: flex; gap: 10px; flex-wrap: wrap; }
+.masthead__stats strong { color: var(--ink); }
+.masthead__dot { color: var(--rule-strong); }
+
+.split { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; padding-block: 64px; }
+@media (max-width: 800px) { .split { grid-template-columns: 1fr; gap: 40px; } }
+.split__prose h2 { font-size: 1.5rem; margin-bottom: 18px; }
+.split__prose p { color: var(--ink-soft); max-width: 56ch; margin-bottom: 16px; }
+.btn { display: inline-block; margin-top: 12px; padding: 12px 20px; background: var(--oxblood); color: var(--paper-raised); border-radius: 2px; font-weight: 600; font-size: 0.92rem; }
+.btn:hover { background: var(--oxblood-deep); text-decoration: none; }
+
+.split__ledger { background: var(--paper-raised); border: 1px solid var(--rule); box-shadow: var(--shadow-card); padding: 24px; }
+.ledger__label { font-size: 0.72rem; letter-spacing: 0.1em; color: var(--ink-faint); margin-bottom: 14px; }
+.ledger { list-style: none; margin: 0; padding: 0; }
+.ledger__row { border-top: 1px solid var(--rule); }
+.ledger__row:first-child { border-top: none; }
+.ledger__row a { display: flex; flex-direction: column; gap: 4px; padding-block: 14px; color: var(--ink); }
+.ledger__row a:hover { text-decoration: none; }
+.ledger__row a:hover .ledger__title { color: var(--oxblood); }
+.ledger__date { font-size: 0.76rem; color: var(--ink-faint); }
+.ledger__title { font-weight: 500; line-height: 1.35; }
+.ledger__series { font-size: 0.74rem; color: var(--ink-faint); }
+
+/* Catalog */
+.catalog-head { padding-block: 48px 24px; }
+.catalog-head__tag { color: var(--oxblood); font-size: 0.78rem; letter-spacing: 0.08em; margin-bottom: 10px; }
+.catalog-head h1 { font-size: clamp(1.8rem, 3.4vw, 2.4rem); margin-bottom: 8px; }
+.catalog-head__count { color: var(--ink-faint); font-size: 0.85rem; }
+
+.controls { display: flex; gap: 12px; flex-wrap: wrap; padding-block: 12px 32px; position: sticky; top: 72px; background: var(--paper); z-index: 5; }
+.controls input, .controls select { font-family: inherit; font-size: 0.9rem; padding: 10px 14px; border: 1px solid var(--rule-strong); background: var(--paper-raised); color: var(--ink); border-radius: 2px; }
+.controls input { flex: 1 1 320px; min-width: 0; }
+.controls select { flex: 0 0 auto; min-width: 200px; }
+.controls input:focus, .controls select:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+.empty-state { padding: 48px 0; color: var(--ink-faint); text-align: center; }
+
+.catalog { list-style: none; margin: 0 0 64px; padding: 0; border-top: 1px solid var(--rule-strong); }
+.catalog-row { border-bottom: 1px solid var(--rule); }
+.catalog-row__link { display: grid; grid-template-columns: 100px 1fr auto; gap: 20px; align-items: center; padding-block: 16px; color: var(--ink); }
+.catalog-row__link:hover { text-decoration: none; background: var(--oxblood-tint); margin-inline: -16px; padding-inline: 16px; }
+.catalog-row__link:hover .catalog-row__title { color: var(--oxblood); }
+.catalog-row__date { font-size: 0.78rem; color: var(--ink-faint); }
+.catalog-row__main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.catalog-row__title { font-weight: 500; line-height: 1.35; }
+.catalog-row__series { font-size: 0.74rem; color: var(--ink-faint); }
+.catalog-row__meta { display: flex; gap: 6px; flex-shrink: 0; }
+.badge { font-size: 0.66rem; letter-spacing: 0.05em; padding: 3px 7px; border: 1px solid var(--rule-strong); color: var(--ink-soft); white-space: nowrap; }
+.badge--video { border-color: var(--oxblood); color: var(--oxblood); }
+@media (max-width: 640px) { .catalog-row__link { grid-template-columns: 1fr; gap: 6px; } .catalog-row__meta { order: -1; } }
+
+/* Sermon detail */
+.sermon { padding-block: 32px 96px; max-width: 760px; margin: 0 auto; }
+.breadcrumb { margin-bottom: 32px; }
+.breadcrumb a { color: var(--ink-faint); font-size: 0.8rem; }
+.breadcrumb a:hover { color: var(--oxblood); }
+.sermon__head { margin-bottom: 32px; }
+.sermon__series { color: var(--oxblood); font-size: 0.78rem; letter-spacing: 0.06em; margin-bottom: 10px; }
+.sermon__head h1 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); line-height: 1.25; margin-bottom: 10px; }
+.sermon__date { color: var(--ink-faint); font-size: 0.82rem; }
+
+.video-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; border: 1px solid var(--rule-strong); margin-bottom: 32px; }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.guides { border: 1px solid var(--rule); background: var(--paper-raised); box-shadow: var(--shadow-card); padding: 20px 24px; margin-bottom: 40px; }
+.guides__label { font-size: 0.72rem; letter-spacing: 0.1em; color: var(--ink-faint); margin-bottom: 12px; }
+.guides__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 20px; }
+.guide-link { font-size: 0.85rem; color: var(--ink); border-bottom: 1px solid var(--rule-strong); padding-bottom: 2px; }
+.guide-link:hover { color: var(--oxblood); border-color: var(--oxblood); text-decoration: none; }
+
+.transcript { margin-bottom: 48px; }
+.transcript__label { font-size: 0.72rem; letter-spacing: 0.1em; color: var(--ink-faint); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--rule-strong); }
+.transcript p { max-width: 68ch; color: var(--ink); margin-bottom: 1.1em; }
+.transcript p:first-of-type { font-size: 1.05rem; }
+
+.sermon__source { font-size: 0.78rem; color: var(--ink-faint); padding-top: 24px; border-top: 1px solid var(--rule); }
+.sermon__source a { color: var(--ink-faint); }
