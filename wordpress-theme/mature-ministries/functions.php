@@ -82,6 +82,9 @@ function mm_register_sermon_cpt() {
 	register_post_meta( 'mm_sermon', 'mm_source_link', array(
 		'type' => 'string', 'single' => true, 'show_in_rest' => true,
 	) );
+	register_post_meta( 'mm_sermon', 'mm_audio_url', array(
+		'type' => 'string', 'single' => true, 'show_in_rest' => true,
+	) );
 	// Serialized array of { label, url }.
 	register_post_meta( 'mm_sermon', 'mm_pdf_guides', array(
 		'type' => 'string', 'single' => true, 'show_in_rest' => false,

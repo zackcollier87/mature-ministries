@@ -9,6 +9,7 @@ while ( have_posts() ) : the_post();
 	$yt     = get_post_meta( $id, 'mm_youtube_id', true );
 	$link   = get_post_meta( $id, 'mm_source_link', true );
 	$guides = mm_get_guides( $id );
+	$audio  = get_post_meta( $id, 'mm_audio_url', true );
 	$terms  = get_the_terms( $id, 'mm_series' );
 	?>
 	<article class="container sermon">
@@ -31,6 +32,16 @@ while ( have_posts() ) : the_post();
 					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 					allowfullscreen
 				></iframe>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( $audio ) : ?>
+			<div class="audio-block">
+				<p class="mono audio-block__label">LISTEN</p>
+				<audio controls preload="none" src="<?php echo esc_url( $audio ); ?>">
+					Your browser does not support the audio element. <a href="<?php echo esc_url( $audio ); ?>">Download the audio</a> instead.
+				</audio>
+				<a class="mono audio-block__download" href="<?php echo esc_url( $audio ); ?>" download>Download MP3 &darr;</a>
 			</div>
 		<?php endif; ?>
 

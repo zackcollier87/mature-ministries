@@ -36,6 +36,16 @@ const paragraphs = sermon.transcript
       </div>
     )}
 
+    {sermon.audio_url && (
+      <div class="audio-block">
+        <p class="mono audio-block__label">LISTEN</p>
+        <audio controls preload="none" src={sermon.audio_url}>
+          Your browser does not support the audio element. <a href={sermon.audio_url}>Download the audio</a> instead.
+        </audio>
+        <a class="mono audio-block__download" href={sermon.audio_url} download>Download MP3 &darr;</a>
+      </div>
+    )}
+
     {sermon.pdf_guides.length > 0 && (
       <div class="guides">
         <p class="mono guides__label">STUDY GUIDE</p>
@@ -99,6 +109,34 @@ const paragraphs = sermon.transcript
     height: 100%;
     border: 0;
   }
+
+  .audio-block {
+    border: 1px solid var(--rule);
+    background: var(--paper-raised);
+    box-shadow: var(--shadow-card);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .audio-block__label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .audio-block audio {
+    width: 100%;
+  }
+  .audio-block__download {
+    align-self: flex-start;
+    font-size: 0.85rem;
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 2px;
+    width: fit-content;
+  }
+  .audio-block__download:hover { color: var(--oxblood); border-color: var(--oxblood); text-decoration: none; }
 
   .guides {
     border: 1px solid var(--rule);

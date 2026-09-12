@@ -5,6 +5,8 @@ A complete archive of Pastor Wayne Edwards' sermon library — video, full trans
 - **Live site:** https://mature-ministries.pages.dev
 - **Repo:** https://github.com/zackcollier87/mature-ministries
 
+Each sermon page includes standalone audio (extracted from the sermon's YouTube video, 48kbps mono MP3, hosted on a Cloudflare R2 bucket) with an in-page player and a download link, for 492 of the 493 sermons that have video.
+
 See `PRODUCT.md` for product context and `DESIGN.md` for the visual system.
 
 ## Two ways to host this

@@ -19,6 +19,7 @@ export interface Sermon {
   youtube_id: string | null;
   pdf_guides: PdfGuide[];
   thumbnail: string | null;
+  audio_url: string | null;
   _scrape_ok: boolean;
 }
 

@@ -110,6 +110,7 @@ def main():
             ("mm_youtube_id", s.get("youtube_id") or ""),
             ("mm_sermon_date", s["date"]),
             ("mm_source_link", s.get("link") or ""),
+            ("mm_audio_url", s.get("audio_url") or ""),
         ]
         if guides:
             postmeta.append(("mm_pdf_guides", php_serialize(guides)))
